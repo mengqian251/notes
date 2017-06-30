@@ -1,0 +1,293 @@
+1.修改数据
+POST playcount-2017*/_update_by_query
+{
+  "query": {
+    "bool": {
+      "must_not": [
+        {
+          "terms": {
+            "releaseTime": [
+              "2017-05-26T12:15:35.000Z"
+            ]
+          }
+        }
+      ],
+      "must": [
+        {
+          "terms": {
+            "id": [
+              "http://www.miaopai.com/show/FavDCxuJXL0z4JgfE4wonW~TI5aA99jI.htm"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "script" : {
+    "inline": "ctx._source.releaseTime=\"2017-05-26T12:15:35.000Z\";ctx._source.release=1495800935"
+  }
+}
+
+2.
+GET repost-2017*/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "terms": {
+            "id": []
+          }
+        },
+        {
+          "range": {
+            "tsTime": {
+              "lte": "2017-06-01T00:00:00.000Z"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "NAME2": {
+      "terms": {
+        "field": "id",
+        "size": 1000
+      },
+      "aggs": {
+        "NAME3": {
+          "max": {
+            "field": "repostCount"
+          }
+        }
+      }
+    },
+    "sum_group_by_time":{
+            "sum_bucket": {
+            "buckets_path": "NAME2>NAME3"
+          }
+          }
+  }
+}
+
+3.
+GET playcount-*/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "terms": {
+            "sources": [
+              "miaopai"
+            ]
+          }
+        },
+        {
+          "range": {
+            "ts": {
+              "gte": 1493182800,
+              "lte": 1493186400
+            }
+          }
+        }
+      ]
+    }
+  },"size": 0
+  , "aggs": {
+    "NAME1": {
+      "date_histogram": {
+        "field": "tsTime",
+        "interval": 600000
+      },
+      "aggs": {
+        "NAME2": {
+          "terms": {
+            "field": "id",
+            "size": 100000
+          },
+          "aggs": {
+            "NAME3": {
+              "max": {
+                "field": "playcount"
+              }
+            }
+          }
+        },
+        "sum_group_by_time":{
+            "sum_bucket": {
+            "buckets_path": "NAME2>NAME3"
+          }
+          }
+      }
+    }
+  }
+}
+
+4.
+POST test/test/5/_update
+{
+    "script" :
+    "ctx._source.remove(\"name\")"
+}
+
+POST test/_update_by_query
+{
+  "script" : {
+        "inline": "ctx._source.name=\"mengqian\""
+    },
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "sid": {
+              "value": "001"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+5.删数据
+POST comments0321/_delete_by_query
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "terms": {
+            "source": [
+              "douban"
+            ]
+          }
+        },
+        {
+          "range": {
+            "ts": {
+              "gte": "2017-02-06 00:00:00",
+              "lte": "2017-02-07 00:00:00"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+6.
+GET playcount-*/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "terms": {
+            "sources": [
+              "miaopai"
+            ]
+          }
+        },
+        {
+          "range": {
+            "ts": {
+              "gte": 1493182800,
+              "lte": 1493186400
+            }
+          }
+        }
+      ]
+    }
+  },"size": 0
+  , "aggs": {
+    "NAME1": {
+      "date_histogram": {
+        "field": "tsTime",
+        "interval": 600000
+      },
+      "aggs": {
+        "NAME2": {
+          "terms": {
+            "field": "id",
+            "size": 100000
+          },
+          "aggs": {
+            "NAME3": {
+              "max": {
+                "field": "playcount"
+              }
+            }
+          }
+        },
+        "sum_group_by_time":{
+            "sum_bucket": {
+            "buckets_path": "NAME2>NAME3"
+          }
+          }
+      }
+    }
+  }
+}
+
+7.
+POST playcount-2017*/_update_by_query
+{
+  "query": {
+    "bool": {
+      "must_not": [
+        {
+          "terms": {
+            "releaseTime": [
+              "2017-05-26T12:15:35.000Z"
+            ]
+          }
+        }
+      ],
+      "must": [
+        {
+          "terms": {
+            "id": [
+              "http://www.miaopai.com/show/FavDCxuJXL0z4JgfE4wonW~TI5aA99jI.htm"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "script" : {
+    "inline": "ctx._source.releaseTime=\"2017-05-26T12:15:35.000Z\";ctx._source.release=1495800935"
+  }
+}
+
+8.
+PUT playcount-2017.06/playcount/AVxySnjOkhQTYlh60000
+{
+          "types": "playcount",
+          "tsTime": "2017-06-03T12:00:00.000Z",
+          "releaseTime": "2017-06-02T16:00:00.000Z",
+          "sources": "miaopai",
+          "offset": 13056,
+          "release": 1496419200,
+          "channel": "好好吃",
+          "input_type": "log",
+          "source": "/spider/workspace/miaopai_indicators_task_hhc/playcount.1496566048.miaopai.json",
+          "type": "playcount",
+          "tags": [
+            "beats_input_codec_json_applied"
+          ],
+          "@timestamp": "2017-06-03T12:00:00.547Z",
+          "playcount": 1000000,
+          "@version": "1",
+          "beat": {
+            "hostname": "3fe666f1d750",
+            "name": "3fe666f1d750",
+            "version": "5.3.0"
+          },
+          "host": "3fe666f1d750",
+          "id": "http://www.miaopai.com/show/yXqAnPbjsuKVDPex-7496v~LZKHhFFVc.htm",
+          "category": "video",
+          "ts": 1496491200
+        }

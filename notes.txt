@@ -1,0 +1,60 @@
+1.在readme里插入图片
+<a href="http://git.zintow.com:10080/deployment/tracking/blob/master/images/"><img src="images/tracking.png" /></a>
+
+2.取出URL命令
+grep "\"key\":" a.txt |awk -F '\"' '{print $4}'
+
+3.
+awk '{if(length($0)<20) print $0}' a.txt
+
+4.
+grep "\"ts\":" a.txt |awk -F ': ' '{print $2}'|awk -F ',' '{print $1}' > ts.csv
+# 第一个引号为grep需要带的，第二个引号为查询的内容，为区分开，加了\"作为转移符。 |awk -F 代表切分，以冒号空格作为切分的位置，前面是第一列后面是第二列，然后打印出第二列
+
+5.将时间戳转成标准时间
+import time
+
+t = time.localtime(ts)
+print time.strftime('%Y-%m-%d %H:%M:%S', t)
+
+6.
+awk '/aaa/ {sum += $2};END {print sum}' test
+
+7.postman借口数据
+# -*- coding: utf-8 -*-
+
+import urllib2
+import requests
+req = urllib2.Request("http://csss.zintow.com/tracking/tracker?limit=10")
+res = urllib2.urlopen(req)
+html = res.read()
+print html
+
+8.控制机器人
+{"msgtype": "text",
+    "text": {
+        "content": "我就是我, 是不一样的烟火"
+     }
+  }
+
+9.
+awk '{print "\""$1"\","}' a.txt
+
+10.
+sort -u 排序并去重
+wc -l 查行数
+> 写入
+tail 打印最后几行
+head 打印前面几行
+shift+G 移动到最后一行
+ctrl+D 退回到服务器
+hive
+show tables
+load data local inpath '/data/mengqian/hive/a.csv' into table a;
+pwd 看文件路径，我在哪
+create table a
+ll -A 查看所有文件
+sz 下载到本地
+rz 上传到服务器
+grep -v "abc" a.txt  查询a文件不含有abc的
+command+n 再打开一个终端
